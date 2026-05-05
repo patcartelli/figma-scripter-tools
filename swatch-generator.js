@@ -1,20 +1,21 @@
 /**
  * Color Token Swatch Generator
- * Reads all local color variables and generates labeled swatches
- * matching the Color Scale generator thumbnail layout.
+ * Reads all local color variables and generates labeled swatches.
+ * Light Mode and Dark Mode render as side-by-side columns.
+ * Each group row is as wide as the number of tokens in that group.
  * Run in Figma Scripter.
  */
 
 const CONFIG = {
-  swatchWidth:   120,
-  colorHeight:   80,
-  labelHeight:   62,
-  hGap:          8,
-  vGap:          32,
-  groupGap:      48,
-  sectionGap:    80,
-  labelPad:      8,
-  columnsPerRow: 8,
+  swatchWidth: 120,
+  colorHeight: 80,
+  labelHeight: 62,
+  hGap:        8,
+  vGap:        32,
+  groupGap:    48,
+  sectionGap:  80,
+  columnGap:   120,
+  labelPad:    8,
 }
 
 // --- Color Math Utilities ---
@@ -35,17 +36,25 @@ function figmaColorToHex(c) {
 
 // --- Variable Reading & Grouping ---
 
-function resolveColor(v) {
+function findModeInCollection(collection, modeName) {
+  const lower = modeName.toLowerCase()
+  return collection.modes.find(m => m.name.toLowerCase() === lower)
+    || collection.modes.find(m => m.name.toLowerCase().includes(lower))
+    || collection.modes[0]
+}
+
+function resolveColorByMode(v, modeName) {
   const collection = figma.variables.getVariableCollectionById(v.variableCollectionId)
   if (!collection) return null
-  const modeId = collection.modes[0].modeId
-  const value = v.valuesByMode[modeId]
+
+  const mode = findModeInCollection(collection, modeName)
+  const value = v.valuesByMode[mode.modeId]
   if (!value) return null
 
   if (typeof value === "object" && "type" in value && value.type === "VARIABLE_ALIAS") {
     const aliased = figma.variables.getVariableById(value.id)
     if (!aliased) return null
-    return resolveColor(aliased)
+    return resolveColorByMode(aliased, modeName)
   }
 
   if (typeof value === "object" && "r" in value && "g" in value && "b" in value) {
@@ -54,17 +63,22 @@ function resolveColor(v) {
   return null
 }
 
-function getColorTokenSections() {
+function getColorTokenSections(modeName) {
   const colorVars = figma.variables.getLocalVariables("COLOR")
-  if (colorVars.length === 0) {
-    print("No color variables found.")
-    return []
-  }
+  if (colorVars.length === 0) return []
 
+  const isDark = modeName.toLowerCase() === "dark"
   const sectionMap = new Map()
 
   for (const v of colorVars) {
-    const rgba = resolveColor(v)
+    if (isDark) {
+      const collection = figma.variables.getVariableCollectionById(v.variableCollectionId)
+      if (!collection) continue
+      const hasDark = collection.modes.some(m => m.name.toLowerCase().includes("dark"))
+      if (!hasDark) continue
+    }
+
+    const rgba = resolveColorByMode(v, modeName)
     if (!rgba) {
       print(`Skipping ${v.name} — could not resolve color value`)
       continue
@@ -99,7 +113,6 @@ function getColorTokenSections() {
   for (const sectionName of sectionOrder) {
     const groupMap = sectionMap.get(sectionName)
     if (!groupMap) continue
-
     const groups = []
     for (const [groupName, tokens] of groupMap) {
       groups.push({ groupName, tokens })
@@ -108,6 +121,16 @@ function getColorTokenSections() {
   }
 
   return sections
+}
+
+function maxTokenCount(sections) {
+  let max = 0
+  for (const section of sections) {
+    for (const group of section.groups) {
+      if (group.tokens.length > max) max = group.tokens.length
+    }
+  }
+  return max
 }
 
 // --- Rendering ---
@@ -121,7 +144,6 @@ async function createSwatch(token, x, y) {
 
   const rgb = hexToRgb(token.hex)
 
-  // Outer container
   const container = figma.createFrame()
   container.name = token.name
   container.fills = []
@@ -131,7 +153,6 @@ async function createSwatch(token, x, y) {
   container.y = y
   figma.currentPage.appendChild(container)
 
-  // Color block
   const colorBlock = figma.createRectangle()
   colorBlock.name = "color"
   colorBlock.resize(SW, CH)
@@ -140,7 +161,6 @@ async function createSwatch(token, x, y) {
   colorBlock.fills = [{ type: "SOLID", color: { r: rgb.r, g: rgb.g, b: rgb.b }, opacity: token.alpha }]
   container.appendChild(colorBlock)
 
-  // Label block
   const labelBlock = figma.createFrame()
   labelBlock.name = "label"
   labelBlock.fills = [{ type: "SOLID", color: WHITE }]
@@ -150,7 +170,6 @@ async function createSwatch(token, x, y) {
   labelBlock.y = CH
   container.appendChild(labelBlock)
 
-  // Short name — last segment of the token path (e.g. "main", "light", "500")
   const shortName = token.name.split("/").pop()
 
   const nameText = figma.createText()
@@ -166,7 +185,8 @@ async function createSwatch(token, x, y) {
   const hexText = figma.createText()
   hexText.fontName = { family: "Inter", style: "Regular" }
   hexText.fontSize = 10
-  hexText.characters = token.hex
+  const opacityLabel = token.alpha < 1 ? `  ${Math.round(token.alpha * 100)}%` : ""
+  hexText.characters = token.hex + opacityLabel
   hexText.fills = [{ type: "SOLID", color: MID }]
   hexText.textAutoResize = "WIDTH_AND_HEIGHT"
   hexText.x = PAD
@@ -186,28 +206,16 @@ async function createSwatch(token, x, y) {
   return container
 }
 
-async function generateSwatches() {
-  const sections = getColorTokenSections()
-  if (sections.length === 0) {
-    print("No color variables found.")
-    return
-  }
-
-  await figma.loadFontAsync({ family: "Inter", style: "Medium" })
-  await figma.loadFontAsync({ family: "Inter", style: "Regular" })
-
-  const { swatchWidth: SW, colorHeight: CH, labelHeight: LH, hGap, vGap, groupGap, sectionGap, columnsPerRow } = CONFIG
+async function renderSections(sections, startX, startY) {
+  const { swatchWidth: SW, colorHeight: CH, labelHeight: LH, hGap, vGap, groupGap, sectionGap } = CONFIG
   const swatchH = CH + LH
 
-  const startX = figma.viewport.center.x - ((columnsPerRow * (SW + hGap)) / 2)
-  let cursorY = figma.viewport.center.y
-
+  let cursorY = startY
   const allNodes = []
   let totalSwatches = 0
   let totalGroups = 0
 
   for (const section of sections) {
-    // Section header
     const sectionHeader = figma.createText()
     sectionHeader.fontName = { family: "Inter", style: "Medium" }
     sectionHeader.characters = section.sectionName
@@ -221,7 +229,6 @@ async function generateSwatches() {
     for (const group of section.groups) {
       totalGroups++
 
-      // Group header
       const header = figma.createText()
       header.fontName = { family: "Inter", style: "Medium" }
       header.characters = group.groupName
@@ -232,28 +239,87 @@ async function generateSwatches() {
       allNodes.push(header)
       cursorY += header.height + hGap
 
-      // Swatches in grid
+      // One row per group — width determined by token count
       for (let i = 0; i < group.tokens.length; i++) {
-        const col = i % columnsPerRow
-        const row = Math.floor(i / columnsPerRow)
-        const x = startX + col * (SW + hGap)
-        const y = cursorY + row * (swatchH + vGap)
-
-        const swatch = await createSwatch(group.tokens[i], x, y)
+        const x = startX + i * (SW + hGap)
+        const swatch = await createSwatch(group.tokens[i], x, cursorY)
         allNodes.push(swatch)
         totalSwatches++
       }
 
-      const totalRows = Math.ceil(group.tokens.length / columnsPerRow)
-      cursorY += totalRows * (swatchH + vGap) + groupGap
+      cursorY += swatchH + vGap + groupGap
     }
 
     cursorY += sectionGap
   }
 
+  return { allNodes, totalSwatches, totalGroups, endY: cursorY }
+}
+
+async function generateSwatches() {
+  const lightSections = getColorTokenSections("light")
+  const darkSections  = getColorTokenSections("dark")
+
+  if (lightSections.length === 0 && darkSections.length === 0) {
+    print("No color variables found.")
+    return
+  }
+
+  await figma.loadFontAsync({ family: "Inter", style: "Medium" })
+  await figma.loadFontAsync({ family: "Inter", style: "Regular" })
+
+  const { swatchWidth: SW, colorHeight: CH, labelHeight: LH, hGap, groupGap, columnGap } = CONFIG
+
+  // Column widths based on the widest group in each mode
+  const lightColW = maxTokenCount(lightSections) * (SW + hGap)
+  const darkColW  = maxTokenCount(darkSections)  * (SW + hGap)
+  const totalW    = lightColW + columnGap + darkColW
+
+  const lightX = figma.viewport.center.x - totalW / 2
+  const darkX  = lightX + lightColW + columnGap
+  const startY = figma.viewport.center.y
+  const allNodes = []
+  let totalSwatches = 0
+  let totalGroups   = 0
+
+  // Mode headers — same Y, each column's X
+  const lightHeader = figma.createText()
+  lightHeader.fontName = { family: "Inter", style: "Medium" }
+  lightHeader.characters = "Light Mode"
+  lightHeader.fontSize = 32
+  lightHeader.x = lightX
+  lightHeader.y = startY
+  figma.currentPage.appendChild(lightHeader)
+  allNodes.push(lightHeader)
+
+  const darkHeader = figma.createText()
+  darkHeader.fontName = { family: "Inter", style: "Medium" }
+  darkHeader.characters = "Dark Mode"
+  darkHeader.fontSize = 32
+  darkHeader.x = darkX
+  darkHeader.y = startY
+  figma.currentPage.appendChild(darkHeader)
+  allNodes.push(darkHeader)
+
+  const contentY = startY + Math.max(lightHeader.height, darkHeader.height) + groupGap
+
+  const lightResult = await renderSections(lightSections, lightX, contentY)
+  allNodes.push(...lightResult.allNodes)
+  totalSwatches += lightResult.totalSwatches
+  totalGroups   += lightResult.totalGroups
+
+  if (darkSections.length > 0) {
+    const darkResult = await renderSections(darkSections, darkX, contentY)
+    allNodes.push(...darkResult.allNodes)
+    totalSwatches += darkResult.totalSwatches
+    totalGroups   += darkResult.totalGroups
+  } else {
+    print("No dark mode collections found — skipping Dark Mode section.")
+  }
+
   figma.currentPage.selection = allNodes
   figma.viewport.scrollAndZoomIntoView(allNodes)
-  print(`Generated ${totalSwatches} swatches in ${totalGroups} groups across ${sections.length} sections.`)
+  print(`Generated ${totalSwatches} swatches in ${totalGroups} groups.`)
 }
 
 generateSwatches()

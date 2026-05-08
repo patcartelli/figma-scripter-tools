@@ -26,8 +26,8 @@
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Refactor SKILL.md: rewrite description, remove Screen Workflow, fix stale cross-reference
-- [ ] 01-02-PLAN.md — Audit all five support files: verify outline rename, attach audit stamps, flag drift
+- [x] 01-01-PLAN.md — Refactor SKILL.md: rewrite description, remove Screen Workflow, fix stale cross-reference ✓ 2026-05-08
+- [x] 01-02-PLAN.md — Audit all five support files: verify outline rename, attach audit stamps, flag drift ✓ 2026-05-08
 
 **Success Criteria:**
 1. `bluefish-design-system` SKILL.md contains only shared context — any team member reading it can understand the design system without seeing command-specific workflow steps

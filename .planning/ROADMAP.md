@@ -43,6 +43,10 @@ Plans:
 
 **Dependencies:** None
 
+**Plans:** 2 plans | **Wave 1** (all plans parallel — zero file overlap)
+- `01-01-PLAN.md` — Refactor SKILL.md (description + Screen Workflow removal + stale ref fix) | FOUND-01, FOUND-02
+- `01-02-PLAN.md` — Audit 5 support files (verify outline rename, flag drift) | FOUND-03
+
 ---
 
 ### Phase 2: /bf-explore

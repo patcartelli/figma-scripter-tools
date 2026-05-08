@@ -10,14 +10,15 @@ See: .planning/PROJECT.md (updated 2026-05-08)
 ## Current Phase
 
 **Phase 1: Foundation**
-Status: Not started
+Status: Context gathered — ready for planning
 Goal: Refactor `bluefish-design-system` into a clean shared context layer
+Resume: `.planning/phases/01-foundation/01-CONTEXT.md`
 
 ## Phase Progress
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Foundation | Not started |
+| 1 | Foundation | Context gathered |
 | 2 | /bf-explore | Not started |
 | 3 | /bf-prototype | Not started |
 

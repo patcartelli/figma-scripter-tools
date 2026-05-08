@@ -23,6 +23,12 @@
 
 **Requirements:** FOUND-01, FOUND-02, FOUND-03
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Refactor SKILL.md: rewrite description, remove Screen Workflow, fix stale cross-reference
+- [ ] 01-02-PLAN.md — Audit all five support files: verify outline rename, attach audit stamps, flag drift
+
 **Success Criteria:**
 1. `bluefish-design-system` SKILL.md contains only shared context — any team member reading it can understand the design system without seeing command-specific workflow steps
 2. Each skill's `description:` field is specific enough to auto-trigger without a slash command (test: describe a task to Claude without typing a command and verify the right skill fires)

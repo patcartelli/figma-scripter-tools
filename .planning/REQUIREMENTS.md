@@ -22,11 +22,11 @@
 
 ### /bf-prototype
 
-- [ ] **PROT-01**: `/bf-prototype` SKILL.md created at `~/.claude/skills/bf-prototype/SKILL.md` with a prototype generation workflow
-- [ ] **PROT-02**: HTML prototype mode — quick, no build step, full Bluefish token usage, interaction states via CSS or minimal JS
-- [ ] **PROT-03**: Vite+MUI scaffold mode — runnable prototype with `useState` for interaction states, MUI wrapping pattern, DM Sans, reset styles applied
-- [ ] **PROT-04**: All prototype output uses `color-roles` token paths, correct MUI components, and required ARIA props — zero hardcoded hex or px literals
-- [ ] **PROT-05**: Skill fires correctly when a user asks to prototype a Bluefish screen or interaction
+- [x] **PROT-01**: `/bf-prototype` SKILL.md created at `~/.claude/skills/bf-prototype/SKILL.md` with a prototype generation workflow
+- [x] **PROT-02**: HTML prototype mode — quick, no build step, full Bluefish token usage, interaction states via CSS or minimal JS
+- [x] **PROT-03**: Vite+MUI scaffold mode — runnable prototype with `useState` for interaction states, MUI wrapping pattern, DM Sans, reset styles applied
+- [x] **PROT-04**: All prototype output uses `color-roles` token paths, correct MUI components, and required ARIA props — zero hardcoded hex or px literals
+- [x] **PROT-05**: Skill fires correctly when a user asks to prototype a Bluefish screen or interaction
 
 ---
 

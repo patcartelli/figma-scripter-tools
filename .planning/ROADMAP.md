@@ -100,6 +100,11 @@ Plans:
 
 **Dependencies:** Phase 1 (foundation clean), Phase 2 (explore pattern informs structure)
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 03-01-PLAN.md — Create bf-prototype SKILL.md with three-path intake gate, HTML and Vite+MUI output rules, token compliance, and human verification
+
 ---
 
 ## v2 Phases (Future)

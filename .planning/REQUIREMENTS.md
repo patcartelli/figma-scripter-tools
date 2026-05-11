@@ -15,10 +15,10 @@
 
 ### /bf-explore
 
-- [ ] **EXPL-01**: `/bf-explore` SKILL.md created at `~/.claude/skills/bf-explore/SKILL.md` with a focused layout variation workflow
-- [ ] **EXPL-02**: Skill generates 2–3 meaningfully distinct HTML layout variations (not cosmetic differences — distinct layout or interaction patterns)
-- [ ] **EXPL-03**: Every Bluefish value in output is annotated with its token path inline (`background-color: var(--color-roles-primary-main); /* color-roles/primary/main */`)
-- [ ] **EXPL-04**: Skill fires correctly when a user asks for layout explorations or variations on a Bluefish screen
+- [x] **EXPL-01**: `/bf-explore` SKILL.md created at `~/.claude/skills/bf-explore/SKILL.md` with a focused layout variation workflow
+- [x] **EXPL-02**: Skill generates 2–3 meaningfully distinct HTML layout variations (not cosmetic differences — distinct layout or interaction patterns)
+- [x] **EXPL-03**: Every Bluefish value in output is annotated with its token path inline (`background-color: var(--color-roles-primary-main); /* color-roles/primary/main */`)
+- [x] **EXPL-04**: Skill fires correctly when a user asks for layout explorations or variations on a Bluefish screen
 
 ### /bf-prototype
 

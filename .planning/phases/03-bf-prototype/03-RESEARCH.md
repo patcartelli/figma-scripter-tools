@@ -673,17 +673,17 @@ The generated output rules specify ARIA props (accessibility) and token complian
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Vite+MUI scaffold completeness**
    - What we know: D-06 says "one App.tsx with the full screen"; `npm run dev` must work.
    - What's unclear: Does the skill output only `App.tsx` content, or also `main.tsx`, `index.html`, and `package.json`? Without these, `npm run dev` cannot work from a fresh directory.
-   - Recommendation: The plan should resolve this by specifying that the skill outputs a minimum viable set of files: `App.tsx` (primary), and explicit notes or code blocks for `main.tsx` (ThemeProvider + CssBaseline wiring) and `index.html` (DM Sans font link). The planner should pick one and encode it in the Output Rules section.
+   - RESOLVED: Skill outputs App.tsx (primary screen block) + main.tsx (ThemeProvider/CssBaseline wiring) + index.html (DM Sans font link) as separate fenced blocks labelled by filename. App.tsx is the screen; the wiring files are infrastructure. This satisfies "npm run dev works" per Plan Section 8 Rule 3.
 
 2. **Hover state token**
    - What we know: The reference files use `rgba(41,41,41,0.04)` for hover backgrounds, which has no clean token path. Foundation rule 5 says to use `color-roles/action/*` tokens for state layers.
    - What's unclear: Is there a `color-roles/action/hover` token that should be used in prototype output? The reference files don't use it; the foundation says it exists.
-   - Recommendation: Skill output rules should use `color-roles/action/hover` (from tokens.md, which the implementer will read on demand) and flag if the value is unavailable. The anti-patterns section should list `rgba(41,41,41,0.04)` as an unflagged gap that must be replaced.
+   - RESOLVED: Output rules use `color-roles/action/hover` (read from tokens.md on demand); flag with ⚠️ if the token is unavailable in the live Figma variables. `rgba(41,41,41,0.04)` without a flag is listed as an anti-pattern per Plan Section 7 Rule 7.
 
 ---
 

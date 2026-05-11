@@ -5,22 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Start a screen and the Bluefish design language just works — no manual token lookup, no per-session setup, no drift.
-**Current focus:** Phase 1 — Foundation
+**Current focus:** Phase 2 — /bf-explore
 
 ## Current Phase
 
-**Phase 1: Foundation**
-Status: Execution complete — 2/2 plans done, pending verification
-Goal: Refactor `bluefish-design-system` into a clean shared context layer
-Plans: `.planning/phases/01-foundation/01-01-PLAN.md`, `01-02-PLAN.md`
-Last updated: 2026-05-08
+**Phase 2: /bf-explore**
+Status: Ready to begin
+Goal: Team can type `/bf-explore` and receive 2–3 Bluefish-annotated HTML layout variations
+Last updated: 2026-05-11
 
 ## Phase Progress
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 1 | Foundation | Executing — 2/2 plans complete, verifying |
-| 2 | /bf-explore | Not started |
+| 1 | Foundation | Complete ✓ 2026-05-11 |
+| 2 | /bf-explore | Up next |
 | 3 | /bf-prototype | Not started |
 
 ## Decisions Log

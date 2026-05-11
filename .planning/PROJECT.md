@@ -23,7 +23,7 @@ Start a screen and the Bluefish design language just works — no manual token l
 
 ### Active
 
-- [ ] Foundation layer refactored: shared context separated from command-specific workflow rules
+- ✓ Foundation layer refactored: shared context separated from command-specific workflow rules — Validated in Phase 1: Foundation (2026-05-11)
 - [ ] `/bf-explore` skill: focused layout variation generator with Bluefish token annotation
 - [ ] `/bf-prototype` skill: Bluefish-aligned HTML or Vite+MUI prototype with interaction states
 - [ ] `/bf-spec` skill: spec output from Figma screen via MCP (spec-template.md format)

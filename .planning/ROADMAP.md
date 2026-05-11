@@ -70,6 +70,11 @@ Plans:
 
 **Dependencies:** Phase 1 (foundation SKILL.md refactored, shared context clean)
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 02-01-PLAN.md — Create bf-explore SKILL.md with intake gate, output rules, inline token annotation, and human verification
+
 ---
 
 ### Phase 3: /bf-prototype

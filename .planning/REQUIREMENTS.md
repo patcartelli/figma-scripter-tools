@@ -1,7 +1,7 @@
 # Requirements
 
 **Project:** Bluefish Design System Skill System
-**Scope:** v1 — Foundation + /bf-explore + /bf-prototype
+**Scope:** v1.1 — /bf-spec + /bf-build | v1 — Foundation + /bf-explore + /bf-prototype
 
 ---
 
@@ -30,10 +30,25 @@
 
 ---
 
-## v2 Requirements (Deferred)
+## v1.1 Requirements
 
-- `/bf-spec` skill — spec output from Figma screen via MCP (spec-template.md format)
-- `/bf-build` skill — production React/MUI code with strict token compliance
+### /bf-spec
+
+- [ ] **SPEC-01**: `/bf-spec` SKILL.md created at `~/.claude/skills/bf-spec/SKILL.md` with the three-tool Figma MCP sequence (`get_metadata` → `get_variable_defs` → `get_design_context`) as the core data-gathering mechanic
+- [ ] **SPEC-02**: Skill fires correctly when user types `/bf-spec` or asks for a spec or handoff doc for a Bluefish screen
+
+### /bf-build
+
+- [ ] **BUILD-01**: `/bf-build` SKILL.md created at `~/.claude/skills/bf-build/SKILL.md` supporting two intake paths — Path A: Figma frame open (reads via MCP), Path B: existing `/bf-spec` output file provided
+- [ ] **BUILD-02**: Skill fires correctly when user types `/bf-build` or asks to build or implement a Bluefish component from a spec or Figma frame
+
+---
+
+## Future Requirements
+
+- `/bf-spec` full handoff doc: component inventory, redline specs, interaction notes in spec-template.md format
+- `/bf-spec` Code Connect graceful degradation: detects prompt interrupt, continues with `⚠️` flag
+- `/bf-build` production output quality: named wrapper, TypeScript interface extending MUI types, DATA-03 dual-path enforcement
 - `/bf-audit` skill — scan existing code for hardcoded values, suggest token replacements
 - `/bf-tokens` skill — quick token lookup and design decision support
 - `/bf-handoff` skill — combined spec + implementation notes for engineering
@@ -67,3 +82,7 @@
 | PROT-03 | Phase 3 |
 | PROT-04 | Phase 3 |
 | PROT-05 | Phase 3 |
+| SPEC-01 | Phase 4 |
+| SPEC-02 | Phase 4 |
+| BUILD-01 | Phase 5 |
+| BUILD-02 | Phase 5 |

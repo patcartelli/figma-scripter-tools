@@ -12,7 +12,7 @@
 | 1 | Foundation | Clean shared context layer | FOUND-01, FOUND-02, FOUND-03 | 3 ✓ 2026-05-11 |
 | 2 | /bf-explore | Working layout variation command | EXPL-01, EXPL-02, EXPL-03, EXPL-04 | 4 ✓ 2026-05-11 |
 | 3 | /bf-prototype | 1/1 | Complete    | 2026-05-11 |
-| 4 | /bf-spec | Figma → structured handoff doc via MCP | SPEC-01, SPEC-02 | 4 |
+| 4 | /bf-spec | 3/3 | Complete    | 2026-06-11 |
 | 5 | /bf-build | Spec or frame → production React/MUI component | BUILD-01, BUILD-02 | 4 |
 
 ---
@@ -123,7 +123,7 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Confirm foundation description exclusion clause + create bf-spec/ directory (pre-work)
 - [x] 04-02-PLAN.md — Author bf-spec/SKILL.md (10 sections: frontmatter, @include, summary, support files, scope-inference intake, three-tool MCP sequence, screen mode rules, component mode rules, sub-component recursion, anti-patterns)
-- [ ] 04-03-PLAN.md — Human verify five scenarios (bare invoke, context invoke, auto-trigger, screen mode, component mode)
+- [x] 04-03-PLAN.md — Human verify five scenarios (bare invoke, context invoke, auto-trigger, screen mode, component mode)
 
 **Pre-work:** Update `bluefish-design-system` foundation description to exclude "spec" and "build" triggers before Phase 4 testing begins — handled by Plan 04-01
 

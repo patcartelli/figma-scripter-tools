@@ -20,12 +20,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-08)
 
 **Core value:** Start a screen and the Bluefish design language just works — no manual token lookup, no per-session setup, no drift.
-**Current focus:** Phase 4 — /bf-spec
+**Current focus:** Phase 5 — /bf-build
 
 ## Current Phase
 
 **Phase 4: /bf-spec**
-Status: Executing — Plan 04-03 human checkpoint next
+Status: Complete ✓ 2026-06-11
 Last updated: 2026-06-11
 
 ## Phase Progress
@@ -35,7 +35,7 @@ Last updated: 2026-06-11
 | 1 | Foundation | Complete ✓ 2026-05-11 |
 | 2 | /bf-explore | Complete ✓ 2026-05-11 |
 | 3 | /bf-prototype | Complete ✓ 2026-05-11 |
-| 4 | /bf-spec | Planning |
+| 4 | /bf-spec | Complete ✓ 2026-06-11 |
 | 5 | /bf-build | Not started |
 
 ## Decisions Log

@@ -34,8 +34,8 @@
 
 ### /bf-spec
 
-- [ ] **SPEC-01**: `/bf-spec` SKILL.md created at `~/.claude/skills/bf-spec/SKILL.md` with the three-tool Figma MCP sequence (`get_metadata` → `get_variable_defs` → `get_design_context`) as the core data-gathering mechanic
-- [ ] **SPEC-02**: Skill fires correctly when user types `/bf-spec` or asks for a spec or handoff doc for a Bluefish screen
+- [x] **SPEC-01**: `/bf-spec` SKILL.md created at `~/.claude/skills/bf-spec/SKILL.md` with the three-tool Figma MCP sequence (`get_metadata` → `get_variable_defs` → `get_design_context`) as the core data-gathering mechanic
+- [x] **SPEC-02**: Skill fires correctly when user types `/bf-spec` or asks for a spec or handoff doc for a Bluefish screen
 
 ### /bf-build
 

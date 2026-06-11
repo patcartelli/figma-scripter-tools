@@ -118,8 +118,14 @@ Plans:
   2. Skill executes the correct MCP sequence — `get_metadata` first, then `get_variable_defs`, then `get_design_context` per sub-component — without reversing order or skipping tools
   3. When `get_design_context` returns a Code Connect prompt instead of component data, the skill emits a `⚠️ Code Connect not configured` flag and continues — output is never blocked
   4. Skill fires correctly when user types `/bf-spec` or asks for a spec or handoff doc for a Bluefish screen
-**Plans:** TBD
-**Pre-work:** Update `bluefish-design-system` foundation description to exclude "spec" and "build" triggers before Phase 4 testing begins
+**Plans:** 3 plans | **Wave 1** (pre-work) → **Wave 2** (author SKILL.md) → **Wave 3** (human verify)
+
+Plans:
+- [ ] 04-01-PLAN.md — Confirm foundation description exclusion clause + create bf-spec/ directory (pre-work)
+- [ ] 04-02-PLAN.md — Author bf-spec/SKILL.md (10 sections: frontmatter, @include, summary, support files, scope-inference intake, three-tool MCP sequence, screen mode rules, component mode rules, sub-component recursion, anti-patterns)
+- [ ] 04-03-PLAN.md — Human verify five scenarios (bare invoke, context invoke, auto-trigger, screen mode, component mode)
+
+**Pre-work:** Update `bluefish-design-system` foundation description to exclude "spec" and "build" triggers before Phase 4 testing begins — handled by Plan 04-01
 
 ---
 

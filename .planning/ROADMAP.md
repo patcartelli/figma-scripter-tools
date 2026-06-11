@@ -1,7 +1,7 @@
 # Roadmap
 
 **Project:** Bluefish Design System Skill System
-**Phases:** 3 | **Requirements:** 11 (v1) | **Mode:** Vertical MVP
+**Phases:** 5 | **Requirements:** 15 (v1 + v1.1) | **Mode:** Vertical MVP
 
 ---
 
@@ -12,6 +12,8 @@
 | 1 | Foundation | Clean shared context layer | FOUND-01, FOUND-02, FOUND-03 | 3 ✓ 2026-05-11 |
 | 2 | /bf-explore | Working layout variation command | EXPL-01, EXPL-02, EXPL-03, EXPL-04 | 4 ✓ 2026-05-11 |
 | 3 | /bf-prototype | 1/1 | Complete    | 2026-05-11 |
+| 4 | /bf-spec | Figma → structured handoff doc via MCP | SPEC-01, SPEC-02 | 4 |
+| 5 | /bf-build | Spec or frame → production React/MUI component | BUILD-01, BUILD-02 | 4 |
 
 ---
 
@@ -107,13 +109,35 @@ Plans:
 
 ---
 
-## v2 Phases (Future)
-
 ### Phase 4: /bf-spec
-Spec output from Figma screen via MCP. Blocked on Code Connect configuration (engineering dependency). Define spec when Code Connect blocker has a resolution timeline.
+**Goal:** Team can type `/bf-spec` on any Figma screen and receive a structured engineering handoff doc — component inventory, token table, interaction notes, and accessibility section — generated via the three-tool Figma MCP sequence.
+**Depends on:** Phase 3
+**Requirements:** SPEC-01, SPEC-02
+**Success Criteria** (what must be TRUE):
+  1. `bf-spec/SKILL.md` exists at `~/.claude/skills/bf-spec/SKILL.md` and the skill is invocable via `/bf-spec`
+  2. Skill executes the correct MCP sequence — `get_metadata` first, then `get_variable_defs`, then `get_design_context` per sub-component — without reversing order or skipping tools
+  3. When `get_design_context` returns a Code Connect prompt instead of component data, the skill emits a `⚠️ Code Connect not configured` flag and continues — output is never blocked
+  4. Skill fires correctly when user types `/bf-spec` or asks for a spec or handoff doc for a Bluefish screen
+**Plans:** TBD
+**Pre-work:** Update `bluefish-design-system` foundation description to exclude "spec" and "build" triggers before Phase 4 testing begins
+
+---
 
 ### Phase 5: /bf-build
-Production React/MUI code generation. Blocked on token injection method confirmation (DATA-03). Define spec when engineering confirms the injection mechanism.
+**Goal:** Team can type `/bf-build` and receive a production-ready React/MUI component with full TypeScript props, Bluefish token compliance, and DATA-03 dual-path output — whether starting from a Figma frame or an existing `/bf-spec` output file.
+**Depends on:** Phase 4
+**Requirements:** BUILD-01, BUILD-02
+**Success Criteria** (what must be TRUE):
+  1. `bf-build/SKILL.md` exists at `~/.claude/skills/bf-build/SKILL.md` and the skill is invocable via `/bf-build`
+  2. Path A works: Figma frame open → skill reads frame via MCP (`get_variable_defs` + `get_design_context`) and produces a TypeScript React component
+  3. Path B works: existing `spec-[component].md` file provided → skill reads spec file and produces a TypeScript React component without requiring a Figma frame
+  4. Skill fires correctly when user types `/bf-build` or asks to build or implement a Bluefish component from a spec or Figma frame
+**Plans:** TBD
+**Pre-work:** Verify React version in Vite scaffold before authoring `forwardRef` rules (required in React 18, optional in React 19)
+
+---
+
+## v2 Phases (Future)
 
 ### Phase 6: Extended Commands + AI Insights
 - `/bf-audit`: scan code for hardcoded values
@@ -128,3 +152,11 @@ Production React/MUI code generation. Blocked on token injection method confirma
 **Definition:** All three phases complete, every v1 requirement checked off, `/bf-explore` and `/bf-prototype` in active use by the team.
 
 **Gate:** Two real Bluefish screens prototyped and explored using the skills — output validated by design review.
+
+---
+
+## Milestone: v1.1 Complete
+
+**Definition:** Phase 4 and Phase 5 complete, all four v1.1 requirements checked off (SPEC-01, SPEC-02, BUILD-01, BUILD-02), `/bf-spec` and `/bf-build` in active use by the team.
+
+**Gate:** One real Bluefish screen carried end-to-end through `/bf-spec` → `/bf-build` — spec output verified by design review, component output compiles and matches Figma source.

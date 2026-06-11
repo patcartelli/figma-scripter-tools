@@ -6,7 +6,7 @@ status: planning
 last_updated: "2026-06-11T12:44:54.475Z"
 last_activity: 2026-06-11
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-05-08)
 
 ## Current Phase
 
-**Phase 4: /bf-spec** (blocked — awaiting Code Connect from engineering)
-Status: Not started
-Last updated: 2026-05-11
+**Phase 4: /bf-spec**
+Status: Planning
+Last updated: 2026-06-11
 
 ## Phase Progress
 
@@ -35,7 +35,8 @@ Last updated: 2026-05-11
 | 1 | Foundation | Complete ✓ 2026-05-11 |
 | 2 | /bf-explore | Complete ✓ 2026-05-11 |
 | 3 | /bf-prototype | Complete ✓ 2026-05-11 |
-| 4 | /bf-spec | Blocked — Code Connect prerequisite |
+| 4 | /bf-spec | Planning |
+| 5 | /bf-build | Not started |
 
 ## Decisions Log
 
@@ -46,11 +47,16 @@ Last updated: 2026-05-11
 | 2026-05-08 | Start v1 with /bf-explore and /bf-prototype; defer /bf-spec and /bf-build | Pending |
 | 2026-05-08 | Vertical MVP structure — each phase delivers a working skill | Pending |
 | 2026-05-08 | Team-ready from day one | Pending |
+| 2026-06-11 | Code Connect is not a blocker — build /bf-spec for no-Code-Connect path, degrade gracefully | Resolved |
+| 2026-06-11 | Phase 4 (/bf-spec) before Phase 5 (/bf-build) — spec output feeds build Path B | Resolved |
 
 ## Open Questions
 
-- Code Connect timeline — when can engineering unblock `/bf-spec`?
 - DATA-03 resolution — token injection method confirmed as MUI theme extension or CSS custom properties?
+- React version in Vite scaffold — React 18 (forwardRef required) or React 19 (optional)? Must confirm before Phase 5.
+- Screen-level scoping output format — one document with inventory header + per-component sections, or multiple separate spec files?
+- `get_context_for_code_connect` placement — replaces or supplements `get_design_context` for component deep-dives?
+- Composite component recursion stopping rule — how deep before sub-component becomes its own `/bf-spec` invocation?
 
 ## Session Log
 
@@ -60,10 +66,11 @@ Last updated: 2026-05-11
 | 2026-05-11 | Phase 2 /bf-explore | Context gathered — resume file: .planning/phases/02-bf-explore/02-CONTEXT.md |
 | 2026-05-11 | Phase 3 /bf-prototype | Planned ✓ — 1 plan, verification passed, ready to execute |
 | 2026-05-11 | Phase 3 /bf-prototype | Complete ✓ — PROT-01 through PROT-05 verified, human approval received |
+| 2026-06-11 | Phase 4 /bf-spec | Roadmap created — v1.1 phases 4 and 5 defined, planning started |
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 4 — /bf-spec
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-11 — Milestone v1.1 started
+Status: Planning
+Last activity: 2026-06-11 — v1.1 roadmap created, Phase 4 planning begins

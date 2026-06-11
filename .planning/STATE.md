@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-05-08)
 ## Current Phase
 
 **Phase 4: /bf-spec**
-Status: Ready to execute
+Status: Executing — Plan 04-02 next
 Last updated: 2026-06-11
 
 ## Phase Progress

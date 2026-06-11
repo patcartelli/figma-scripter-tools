@@ -121,7 +121,7 @@ Plans:
 **Plans:** 3 plans | **Wave 1** (pre-work) → **Wave 2** (author SKILL.md) → **Wave 3** (human verify)
 
 Plans:
-- [ ] 04-01-PLAN.md — Confirm foundation description exclusion clause + create bf-spec/ directory (pre-work)
+- [x] 04-01-PLAN.md — Confirm foundation description exclusion clause + create bf-spec/ directory (pre-work)
 - [ ] 04-02-PLAN.md — Author bf-spec/SKILL.md (10 sections: frontmatter, @include, summary, support files, scope-inference intake, three-tool MCP sequence, screen mode rules, component mode rules, sub-component recursion, anti-patterns)
 - [ ] 04-03-PLAN.md — Human verify five scenarios (bare invoke, context invoke, auto-trigger, screen mode, component mode)
 

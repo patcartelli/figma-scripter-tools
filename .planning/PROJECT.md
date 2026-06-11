@@ -10,6 +10,15 @@ The system has two layers: a shared foundation skill (`bluefish-design-system`) 
 
 Start a screen and the Bluefish design language just works — no manual token lookup, no per-session setup, no drift.
 
+## Current Milestone: v1.1 Specifications
+
+**Goal:** Build /bf-spec and /bf-build skills — completing the Figma → spec → production code pipeline.
+
+**Target features:**
+- Research Code Connect integration approach to inform /bf-spec design
+- `/bf-spec` skill: component inventory, redline specs, interaction notes, handoff doc (spec-template.md format)
+- `/bf-build` skill: production React/MUI component with TypeScript props and Bluefish tokens (dual-path ⚠️ pattern)
+
 ## Requirements
 
 ### Validated
@@ -20,15 +29,15 @@ Start a screen and the Bluefish design language just works — no manual token l
 - ✓ Spec template defined (spec-template.md) — existing
 - ✓ `explore this` workflow works end-to-end (confirmed by explorations/) — existing
 - ✓ Prototype scaffold (Vite + MUI) documented in SKILL.md — existing
+- ✓ Foundation layer refactored: shared context separated from command-specific workflow rules — Phase 1 (2026-05-11)
+- ✓ `/bf-explore` skill: layout variation generator with Bluefish token annotation — Phase 2 (2026-05-11)
+- ✓ `/bf-prototype` skill: HTML + Vite+MUI prototype with interaction states — Phase 3 (2026-05-11)
 
 ### Active
 
-- ✓ Foundation layer refactored: shared context separated from command-specific workflow rules — Validated in Phase 1: Foundation (2026-05-11)
-- [ ] `/bf-explore` skill: focused layout variation generator with Bluefish token annotation
-- [ ] `/bf-prototype` skill: Bluefish-aligned HTML or Vite+MUI prototype with interaction states
-- [ ] `/bf-spec` skill: spec output from Figma screen via MCP (spec-template.md format)
-- [ ] `/bf-build` skill: production React/MUI code with strict token compliance
-- [ ] All four command skills are team-ready: clear triggers, correct output, consistent quality
+- [ ] `/bf-spec` skill: spec output from Figma screen — component inventory, redlines, interaction notes, handoff doc
+- [ ] `/bf-build` skill: production React/MUI component with strict token compliance
+- [ ] All four core command skills team-ready: clear triggers, correct output, consistent quality
 
 ### Out of Scope
 
@@ -71,7 +80,7 @@ Start a screen and the Bluefish design language just works — no manual token l
 | Team-ready from day one, not solo-first | Small overhead now avoids rework when team adopts | — Pending |
 
 ---
-*Last updated: 2026-05-08 after initialization*
+*Last updated: 2026-06-11 — Milestone v1.1 Specifications started*
 
 ## Evolution
 

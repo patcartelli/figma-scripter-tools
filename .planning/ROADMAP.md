@@ -138,7 +138,13 @@ Plans:
   2. Path A works: Figma frame open → skill reads frame via MCP (`get_variable_defs` + `get_design_context`) and produces a TypeScript React component
   3. Path B works: existing `spec-[component].md` file provided → skill reads spec file and produces a TypeScript React component without requiring a Figma frame
   4. Skill fires correctly when user types `/bf-build` or asks to build or implement a Bluefish component from a spec or Figma frame
-**Plans:** TBD
+**Plans:** 3 plans | **Wave 1** (routing reclaim pre-work) → **Wave 2** (author bf-build SKILL.md + symlink) → **Wave 3** (human verify 5 scenarios)
+
+Plans:
+- [ ] 05-01-PLAN.md — Routing reclaim: 6 SKILL.md edits across bf-prototype/bf-spec/bluefish-design-system + 4 README.md changes (replacement + table row + usage example + install line)
+- [ ] 05-02-PLAN.md — Author bf-build/SKILL.md with 10 sections (frontmatter, @include + fallback, summary, support files, intake, Figma Context Path A, Path B spec parsing, output rules, anti-patterns) + create ~/.claude/skills/bf-build symlink
+- [ ] 05-03-PLAN.md — Human verify five scenarios (bare invoke, Path A Figma frame, Path B component spec, Path B screen spec inventory gate, Path B composite spec cross-reference auto-read)
+
 **Pre-work:** Verify React version in Vite scaffold before authoring `forwardRef` rules (required in React 18, optional in React 19)
 
 ---

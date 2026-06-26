@@ -25,9 +25,9 @@ the constants at the top, and clicks Run.
 | [`generator-dataviz-palette.js`](generator-dataviz-palette.js) | Categorical dataviz generator → `palette/categorical` (**calculated / OKLCH**) |
 | [`swatch-generator.js`](swatch-generator.js) | Visualizes existing COLOR variables on canvas |
 
-Read each script's header comment and top-of-file constants (`SEEDS`, `CONFIG`,
-`COLLECTION_NAME`/`PALETTE_COLLECTION`, `VAR_PREFIX`) — those are the
-user-facing contract and the source of truth for the docs.
+Read each script's header comment and top-of-file constants (`BRAND_RAMPS`,
+`SEEDS`, `CONFIG`, `COLLECTION_NAME`/`PALETTE_COLLECTION`, `VAR_PREFIX`) — those
+are the user-facing contract and the source of truth for the docs.
 
 ---
 
@@ -51,14 +51,23 @@ they never collide in a flattened namespace:
 | `palette/*` | **`source`** | The raw seed color — the starting point a theme is built from. |
 | `color-roles/*` | **`main`** | The semantic role token, aliased to the palette source (e.g. `color-roles/secondary/main` → `palette/secondary/source`). |
 
-Each ramp is a 12-stop tonal scale generated in OKLCH (perceptually uniform):
+The full stop structure is a 12-step tonal scale, plus a `source` stop holding
+the raw seed/anchor hex verbatim:
 
 ```
-25, 50, 100, 200, 300, 350, 400, 450, 500, 550, 600, 700
+25, 50, 100, 200, 300, 350, 400, 450, 500, 550, 600, 700   (+ source)
 ```
 
-plus a **`source`** stop holding the raw seed hex verbatim (never generated).
-The seed lands visually in the 450–500 region.
+Two caveats to document so writers don't over-generalize:
+
+- **Generation differs by palette.** Categorical ramps are *calculated* in OKLCH
+  (perceptually uniform — equal lightness reads as equal brightness across hues;
+  the seed lands visually in the 450–500 region). Brand ramps are *curated*
+  (stored verbatim) — see the brand script's note on why, and the planned move to
+  calculated.
+- **Stop sets can vary per ramp.** Brand ramps mostly follow the 12-step
+  structure, but each keeps its own set (e.g. `neutral` omits `550` and adds
+  `black`). Don't assume every ramp has all 12 stops.
 
 ---
 

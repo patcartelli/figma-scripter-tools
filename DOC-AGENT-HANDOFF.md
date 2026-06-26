@@ -21,8 +21,8 @@ the constants at the top, and clicks Run.
 
 | File | Role |
 |---|---|
-| [`generator-color-palette.js`](generator-color-palette.js) | Brand ramp generator → `palette/color/light` |
-| [`generator-dataviz-palette.js`](generator-dataviz-palette.js) | Categorical dataviz generator → `palette/categorical` |
+| [`generator-brand-palette.js`](generator-brand-palette.js) | Brand ramps → `palette/color/light` (**data-driven / exact**) |
+| [`generator-dataviz-palette.js`](generator-dataviz-palette.js) | Categorical dataviz generator → `palette/categorical` (**calculated / OKLCH**) |
 | [`swatch-generator.js`](swatch-generator.js) | Visualizes existing COLOR variables on canvas |
 
 Read each script's header comment and top-of-file constants (`SEEDS`, `CONFIG`,
@@ -64,22 +64,36 @@ The seed lands visually in the 450–500 region.
 
 ## The three scripts
 
-### 1. `generator-color-palette.js` — brand ramps (Designer tool)
+### 1. `generator-brand-palette.js` — brand ramps (Designer tool)
 
-**What it does:** Generates tonal ramps for brand roles (`primary`,
-`secondary`, `error`, …) from seed colors and writes them as Figma variables in
-the `palette/color/light` collection, plus renders a labeled swatch sheet on the
-canvas (one column per ramp, swatches bound to their variables).
+**What it does:** Writes the brand ramps (`primary`, `secondary`, `error`,
+`success`, `warning`, `info`, `neutral`) as Figma variables in
+`palette/color/light` and renders a labeled swatch sheet (one column per ramp,
+swatches bound to their variables).
+
+**Data-driven, not algorithmic — and why.** The brand ramps were built in two
+passes: an original base scale (`50,100,200,300,400,500`) plus stops inserted by
+hand to expand the palette (`25, 350, 450, 550, 600, 700`, tagged `"new"` in
+tokens.json). Because part of each ramp was authored by hand, no seed→ramp
+formula reproduces them exactly — so this script stores the curated values
+verbatim (in the `BRAND_RAMPS` constant) and reproduces the file **bit-for-bit**.
+
+> **Future state → calculated steps.** When the tonal curve is finalized so every
+> stop (including the hand-inserted ones) is computed from the seed, `BRAND_RAMPS`
+> should be replaced by generation (the OKLCH engine in
+> `generator-dataviz-palette.js` is the basis). Document this as a known,
+> intended follow-up, not a defect.
 
 **Inputs (top of file):**
-- `SEEDS` — object of `roleName: '#hex'` (one entry per ramp)
+- `BRAND_RAMPS` — the curated ramp data (edit hex values here to change output)
 - `COLLECTION_NAME` / `VAR_PREFIX` — where variables land. Two interpretations
   documented inline: (a) a literal collection named `palette/color/light`, or
   (b) the real `palette` collection with a name prefix. The engineer picks one.
 - `CONFIG` — swatch layout (widths, gaps)
 
 **Output:** Variables `<ramp>/<stop>` and `<ramp>/source` in the target
-collection; a `Brand Palette` frame on the canvas. Re-running is **idempotent**
+collection; a `Brand Palette` frame on the canvas. Each ramp keeps its own stop
+set (e.g. `neutral` has no `550` and adds `black`). Re-running is **idempotent**
 (updates in place, no duplicates); it does **not** delete stale variables.
 
 ### 2. `generator-dataviz-palette.js` — categorical dataviz (Designer tool)
@@ -138,9 +152,11 @@ collections render on any plan.
 ## Workflow (how the pieces fit)
 
 ```
-Designer sets SEEDS in a generator → Run
+Designer runs a generator → Run
+  • brand:       edit BRAND_RAMPS (curated values)  → palette/color/light
+  • categorical: edit SEEDS (calculated from seed)  → palette/categorical
         ↓
-Variables written to palette/* (seed stored as "source")
+Variables written to palette/* (seed/anchor stored as "source")
         ↓
 (future) color-roles/* maps palette source → role "main"  [TODO, Bluefish]
         ↓
@@ -150,9 +166,12 @@ swatch-generator.js → visual swatch sheet of everything in the file
 ## Tone guidance
 
 - **Designers:** assume Figma familiarity, no terminal. Spell out: open Scripter,
-  paste, edit `SEEDS`, Run. Avoid jargon.
+  paste, edit the data at the top (`BRAND_RAMPS` for brand, `SEEDS` for
+  categorical), Run. Avoid jargon.
 - **Engineers:** assume comfort with JS/JSON and the variable model. Focus on the
-  constants contract, the `source`/`main` convention, and the (a)/(b) collection
-  mapping choice.
-- **Both:** the point of this toolset is consistent, auditable color tokens
-  generated from a single seed per ramp. Surface that framing.
+  constants contract, the `source`/`main` convention, the (a)/(b) collection
+  mapping choice, and the data-driven-vs-calculated split (brand is curated today;
+  categorical is computed; brand's future state is calculated).
+- **Both:** the point of this toolset is consistent, auditable color tokens —
+  curated for brand today, calculated for dataviz, with brand moving to
+  calculated in the future. Surface that framing.

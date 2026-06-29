@@ -157,19 +157,16 @@ const SHADE_CANDIDATES = ['500', '550', '600', '700'];
 const BLACK_RGB        = { r: 0, g: 0, b: 0 };
 
 // Returns the lightest shade step (500→550→600→700→black) that clears MIN_CONTRAST
-// against lightRgb. Returns { stop, ratio } where stop is '500'/'550'/…/'black',
-// or null when no candidate passes.
+// against lightRgb, or null if none passes.
 function pickDarkShade(seedRgb, lightRgb) {
   for (const stop of SHADE_CANDIDATES) {
     const step = STEPS.find(s => s.label === stop);
     if (!step) continue;
-    const rgb = stepColor(seedRgb, step);
-    const ratio = contrastRatio(rgb, lightRgb);
-    if (ratio >= MIN_CONTRAST) return { stop, rgb, ratio };
+    const ratio = contrastRatio(stepColor(seedRgb, step), lightRgb);
+    if (ratio >= MIN_CONTRAST) return { stop, ratio };
   }
-  // Last resort: pure black
   const ratio = contrastRatio(BLACK_RGB, lightRgb);
-  if (ratio >= MIN_CONTRAST) return { stop: 'black', rgb: BLACK_RGB, ratio };
+  if (ratio >= MIN_CONTRAST) return { stop: 'black', ratio };
   return null;
 }
 
@@ -364,21 +361,14 @@ async function generate() {
   const bumped    = contrastResults.filter(r => r.status === 'BUMPED');
   const unfixable = contrastResults.filter(r => r.status === 'UNFIXABLE');
 
-  console.log('─── WCAG AA Contrast Report (dark shade on 100/light, ≥4.5:1) ───');
-  console.log('series  seed      dark stop  ratio   status');
-  for (const r of contrastResults) {
-    const ratio  = r.ratio != null ? r.ratio.toFixed(2) + ':1' : '—';
-    const stop   = r.stop ?? '—';
-    const flag   = r.status === 'PASS' ? '✓' : r.status === 'BUMPED' ? '⚠ bumped' : '❌ unfixable';
-    console.log(`  ${String(r.num).padEnd(6)}  ${r.seedHex}  ${stop.padEnd(9)}  ${ratio.padEnd(7)}  ${flag}`);
+  if (bumped.length || unfixable.length) {
+    console.log('WCAG AA — dark shade on 100/light (≥4.5:1)');
+    for (const r of contrastResults.filter(r => r.status !== 'PASS')) {
+      const ratio = r.ratio != null ? r.ratio.toFixed(2) + ':1' : '—';
+      const flag  = r.status === 'BUMPED' ? `⚠ use ${r.stop}` : '❌ unfixable';
+      console.log(`  ${r.num}  ${r.seedHex}  ${flag}  (${ratio})`);
+    }
   }
-  if (bumped.length === 0 && unfixable.length === 0) {
-    console.log(`All ${contrastResults.length} series pass at 500. No bumps needed.`);
-  } else {
-    if (bumped.length)    console.log(`Bumped: ${bumped.map(r => r.num).join(', ')} — use ${bumped.map(r => r.stop).join('/')} for dark role`);
-    if (unfixable.length) console.log(`UNFIXABLE: ${unfixable.map(r => r.num).join(', ')} — manual review required`);
-  }
-  console.log(JSON.stringify(contrastResults, null, 2));
 
   // Semantic role mappings — deferred until the Bluefish role structure lands.
   writeCategoricalRoles(/* paletteVarsByNumber, fonts */);

@@ -140,6 +140,39 @@ function stepColor(seedRgb, step) {
   return step.kind === 'tint' ? tintOklch(seedRgb, step.t) : shadeOklch(seedRgb, step.t);
 }
 
+// ─── WCAG contrast math ───────────────────────────────────────────────────────
+
+function relativeLuminance({ r, g, b }) {
+  const lin = c => c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+}
+
+function contrastRatio(c1, c2) {
+  const [hi, lo] = [relativeLuminance(c1), relativeLuminance(c2)].sort((a, b) => b - a);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+const MIN_CONTRAST     = 4.5;
+const SHADE_CANDIDATES = ['500', '550', '600', '700'];
+const BLACK_RGB        = { r: 0, g: 0, b: 0 };
+
+// Returns the lightest shade step (500→550→600→700→black) that clears MIN_CONTRAST
+// against lightRgb. Returns { stop, ratio } where stop is '500'/'550'/…/'black',
+// or null when no candidate passes.
+function pickDarkShade(seedRgb, lightRgb) {
+  for (const stop of SHADE_CANDIDATES) {
+    const step = STEPS.find(s => s.label === stop);
+    if (!step) continue;
+    const rgb = stepColor(seedRgb, step);
+    const ratio = contrastRatio(rgb, lightRgb);
+    if (ratio >= MIN_CONTRAST) return { stop, rgb, ratio };
+  }
+  // Last resort: pure black
+  const ratio = contrastRatio(BLACK_RGB, lightRgb);
+  if (ratio >= MIN_CONTRAST) return { stop: 'black', rgb: BLACK_RGB, ratio };
+  return null;
+}
+
 // ─── Figma variables ──────────────────────────────────────────────────────────
 
 function findOrCreateCollection(name) {
@@ -280,6 +313,7 @@ async function generate() {
 
   const paletteVarsByNumber = {};
   let totalVars = 0;
+  const contrastResults = [];  // { num, seedHex, stop, ratio, status }
 
   for (let i = 0; i < numbers.length; i++) {
     const num     = numbers[i];
@@ -302,10 +336,22 @@ async function generate() {
       y += swatchH + vGap;
     }
 
+    // Contrast check: find the lightest shade that clears 4.5:1 against the 100 (light) step.
+    // Used as the recommended dark role stop (e.g. for color-roles/categorical dark/onLight).
+    const lightRgb = stepColor(seedRgb, STEPS.find(s => s.label === '100'));
+    const found    = pickDarkShade(seedRgb, lightRgb);
+    contrastResults.push({
+      num,
+      seedHex,
+      stop:   found ? found.stop  : null,
+      ratio:  found ? found.ratio : null,
+      status: !found          ? 'UNFIXABLE'
+            : found.stop === '500' ? 'PASS'
+            :                     'BUMPED',
+    });
+
     // source — raw seed hex, stored verbatim (the theme starting point; not generated).
     // palette/* names this stop "source"; color-roles/* references it as "main".
-    // TODO: contrast checking for accessibility — validate/adjust the finalized
-    // ramp values here before they are committed to variables.
     const sourceVar = setColorVariable(collection, `${VAR_PREFIX}${num}/source`, seedRgb);
     vars.source = sourceVar;
     buildSwatch(sheet, 'source', seedHex, sourceVar, colX, y, fonts);
@@ -314,12 +360,38 @@ async function generate() {
     paletteVarsByNumber[num] = vars;
   }
 
+  // ─── Contrast report ────────────────────────────────────────────────────────
+  const bumped    = contrastResults.filter(r => r.status === 'BUMPED');
+  const unfixable = contrastResults.filter(r => r.status === 'UNFIXABLE');
+
+  console.log('─── WCAG AA Contrast Report (dark shade on 100/light, ≥4.5:1) ───');
+  console.log('series  seed      dark stop  ratio   status');
+  for (const r of contrastResults) {
+    const ratio  = r.ratio != null ? r.ratio.toFixed(2) + ':1' : '—';
+    const stop   = r.stop ?? '—';
+    const flag   = r.status === 'PASS' ? '✓' : r.status === 'BUMPED' ? '⚠ bumped' : '❌ unfixable';
+    console.log(`  ${String(r.num).padEnd(6)}  ${r.seedHex}  ${stop.padEnd(9)}  ${ratio.padEnd(7)}  ${flag}`);
+  }
+  if (bumped.length === 0 && unfixable.length === 0) {
+    console.log(`All ${contrastResults.length} series pass at 500. No bumps needed.`);
+  } else {
+    if (bumped.length)    console.log(`Bumped: ${bumped.map(r => r.num).join(', ')} — use ${bumped.map(r => r.stop).join('/')} for dark role`);
+    if (unfixable.length) console.log(`UNFIXABLE: ${unfixable.map(r => r.num).join(', ')} — manual review required`);
+  }
+  console.log(JSON.stringify(contrastResults, null, 2));
+
   // Semantic role mappings — deferred until the Bluefish role structure lands.
   writeCategoricalRoles(/* paletteVarsByNumber, fonts */);
 
   figma.currentPage.selection = [sheet];
   figma.viewport.scrollAndZoomIntoView([sheet]);
-  figma.notify(`✓ Generated ${numbers.length} categorical ramps (${totalVars} variables) in "${PALETTE_COLLECTION}".`);
+
+  const contrastSummary = unfixable.length
+    ? ` ❌ ${unfixable.length} unfixable — see console`
+    : bumped.length
+    ? ` ⚠️ ${bumped.length} bumped to ${[...new Set(bumped.map(r => r.stop))].join('/')} — see console`
+    : ' — all contrast OK';
+  figma.notify(`✓ Generated ${numbers.length} categorical ramps (${totalVars} variables) in "${PALETTE_COLLECTION}"${contrastSummary}.`);
 }
 
 generate();

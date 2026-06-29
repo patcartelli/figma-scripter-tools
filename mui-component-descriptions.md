@@ -10,7 +10,8 @@ Source of truth: MUI canonical docs prose, adapted to the Bluefish description s
 - **Status:** all entries below have been pasted into Figma's component description field.
 - **Sourcing note:** most MUI `components.json` `description` fields are empty, so descriptions
   are adapted from each component's canonical MUI docs prose. MUI **X** components (Date pickers,
-  Charts) are not in the BLU-19 snapshot and were sourced from MUI X docs.
+  Charts) are not in the BLU-19 snapshot and were sourced from MUI X docs. Net-new charts with no
+  MUI equivalent were sourced from the Bluefish chart documentation in Notion.
 
 ## Coverage
 
@@ -18,7 +19,7 @@ Source of truth: MUI canonical docs prose, adapted to the Bluefish description s
 |---|---|---|
 | Described (MUI Material/System + Bluefish) | 38 sets/components | ✅ done |
 | Described (MUI X Charts) | 7 | ✅ done |
-| Net-new charts (no MUI source) | 6 | ⏳ pull from Notion |
+| Described (Bluefish charts, from Notion) | 6 | ✅ done |
 | Skipped — brand logos | 4 | no MUI source |
 | Skipped — headers | 4 | product-specific |
 | Skipped — nav destinations | 2 | not reusable components |
@@ -130,6 +131,17 @@ Source of truth: MUI canonical docs prose, adapted to the Bluefish description s
 | `Chart - Evolution Filled Line` → LineChart (area) | Tracks a value over a continuous axis such as time, shading the area beneath the line to emphasize volume. Use it to show trends and momentum over a period. | |
 | `Gauge` → Gauge | Shows a single value within a defined range as a radial dial, making progress toward a target easy to read at a glance. Use it for KPIs, scores, or utilization. | |
 
+**Bluefish-sourced** (net-new charts, from the Notion chart documentation):
+
+| Component → Notion source | Description | Flags |
+|---|---|---|
+| `Chart - Bar with Differences` → Bar/Column | A column chart that emphasizes the difference between two values, such as current versus prior period or actual versus target. Use it to make gains and shortfalls easy to read at a glance. Start the value axis at zero so the bar lengths compare honestly. | |
+| `Chart - Card Summaries` → Card summary | A headline metric shown with light supporting context, such as a label or trend. Keep one primary number per card. Use it when a single value carries the story and a full chart would be overkill. | Sibling of the Surfaces card components |
+| `Chart - Key` → Legend | A legend that maps each color or shape in a chart to its meaning. Pair it with charts that show multiple data series so viewers can tell them apart without relying on color alone. | "Key" = legend in Bluefish vocabulary |
+| `Chart - Text` → Plaintext | A single value or short answer rendered as plain text, for when one number says it all. Use it instead of a chart when there is no pattern to show. | |
+| `Chart - Wordcloud` → Word cloud | A cloud of words sized by frequency, giving a rough sense of which terms appear most across a body of text. It is imprecise, so pair it with a ranked table when exact counts matter. | |
+| `Chart - Bubble Chat` → Verbatim Bubbles | A cluster of bubbles that surfaces qualitative verbatim quotes or feedback, each bubble holding one excerpt. Use it to convey the wording and sentiment of responses rather than their counts. Limit to roughly 8 to 10 items per view so quotes stay readable. | "Bubble Chat" = Verbatim Bubbles |
+
 ### List
 
 | Component → MUI | Description | Flags |
@@ -171,13 +183,8 @@ Source of truth: MUI canonical docs prose, adapted to the Bluefish description s
 
 ---
 
-## Net-new charts — pending (pull from Notion)
+## Sources
 
-No clean MUI source; not drafted here per scope (don't invent a source):
-
-- `Chart - Bar with Differences`
-- `Chart - Bubble Chat`
-- `Chart - Card Summaries`
-- `Chart - Key`
-- `Chart - Text`
-- `Chart - Wordcloud`
+- MUI Material/System: BLU-19 `components.json` + canonical MUI docs prose.
+- MUI X (Date pickers, Charts): MUI X documentation.
+- Net-new charts: Bluefish chart documentation in Notion.
